@@ -60,6 +60,7 @@ public class GameHandler {
         */
         if (players.contains(player)){
             players.remove(player);
+            GamePlayer.players.remove(player.getUniqueId());
             return true;
         }
         return false;
@@ -82,6 +83,7 @@ public class GameHandler {
             return false;
         }
         state = GameState.STARTED;
+        new Thread(new GameThread(this)).start();
         return true;
     }
 

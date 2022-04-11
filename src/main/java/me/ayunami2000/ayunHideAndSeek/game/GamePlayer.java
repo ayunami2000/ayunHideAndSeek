@@ -12,6 +12,7 @@ public class GamePlayer {
     public final Player player;
     public Block block = null;
     public long lastBlockChange = 0;
+    public boolean isSeeker = false;
 
     public GamePlayer(Player pl){
         player = pl;
