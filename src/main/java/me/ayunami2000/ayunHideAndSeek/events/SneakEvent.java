@@ -25,7 +25,7 @@ public class SneakEvent implements Listener {
         if (gamePlayer.isSeeker) return;
 
         Block standingInBlock = player.getLocation().getBlock();
-        if (standingInBlock.getType() != Material.AIR) {
+        if (!gamePlayer.isHidden && standingInBlock.getType() != Material.AIR) {
             MessageHandler.sendMessage(player, "invalidSpot");
             return;
         }
@@ -33,10 +33,9 @@ public class SneakEvent implements Listener {
         if (gamePlayer.toggleHidden()){
             if (gamePlayer.isHidden) {
                 Material itemType = player.getItemInHand().getType();
-                if (!itemType.isBlock()) itemType = Material.WOOD;
+                if (itemType == Material.AIR || !itemType.isBlock()) itemType = Material.WOOD;
                 standingInBlock.setType(itemType);
                 gamePlayer.block = standingInBlock;
-                player.sendBlockChange(standingInBlock.getLocation(), Material.AIR, (byte) 0); // todo: check if this works!!
                 for (Player pl : game.players) {
                     if (GamePlayer.getPlayer(pl).isSeeker) pl.hidePlayer(player);
                 }

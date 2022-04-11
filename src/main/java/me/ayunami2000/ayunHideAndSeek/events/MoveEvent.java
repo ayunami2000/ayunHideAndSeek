@@ -22,8 +22,13 @@ public class MoveEvent implements Listener {
         if (gamePlayer == null) return;
         if (gamePlayer.isSeeker) return;
 
+        if (gamePlayer.block.getLocation().equals(player.getLocation().getBlock().getLocation())) return;
+
         if (gamePlayer.isHidden){
-            gamePlayer.toggleHidden();
+            gamePlayer.isHidden = false;
+            for (Player pl : game.players) {
+                if (GamePlayer.getPlayer(pl).isSeeker) pl.showPlayer(player);
+            }
             gamePlayer.block.setType(Material.AIR);
             MessageHandler.sendMessage(player, "noLongerHidden");
         }

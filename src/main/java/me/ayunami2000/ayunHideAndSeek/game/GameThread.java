@@ -77,26 +77,30 @@ public class GameThread implements Runnable{
                     }
                 }
             }
-            //keep everyone healed
+            //keep everyone healed + ghost air block
             for (Player player : game.players){
                 player.setHealth(20);
                 player.setFoodLevel(20);
+                GamePlayer gamePlayer = GamePlayer.getPlayer(player);
+                if (!gamePlayer.isSeeker && gamePlayer.isHidden){
+                    player.sendBlockChange(gamePlayer.block.getLocation(), Material.AIR.getId(), (byte) 0); // todo: check if this works!!
+                }
                 for (PotionEffect potionEffect : player.getActivePotionEffects()) {
                     player.removePotionEffect(potionEffect.getType());
                 }
             }
-            /*
             try {
-                Thread.sleep(1000); // why not every second, easier on the server anyways...
+                Thread.sleep(100);
             } catch (InterruptedException ignored) {}
-            */
         }
         for (Player player : game.players) {
-            if (GamePlayer.getPlayer(player).isSeeker) {
+            GamePlayer gamePlayer = GamePlayer.getPlayer(player);
+            if (gamePlayer.isSeeker) {
                 for (Player pl : game.players) {
                     player.showPlayer(pl);
                 }
             }
+            gamePlayer.block.setType(Material.AIR);
             MessageHandler.sendMessage(player, "gameOver");
         }
     }

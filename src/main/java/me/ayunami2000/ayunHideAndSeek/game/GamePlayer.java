@@ -39,7 +39,7 @@ public class GamePlayer {
 
     public static GamePlayer getPlayerFromBlock(Block bl){
         for (GamePlayer gp : players.values()) {
-            if (gp.block == bl) return gp;
+            if (gp.block.getLocation().equals(bl.getLocation())) return gp;
         }
         return null;
     }
