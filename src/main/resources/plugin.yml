@@ -12,3 +12,6 @@ commands:
   hnsleave:
     description: Leave a hide and seek game!
     usage: /<command>
+  hnsinfo:
+    description: Get info about the current hide and seek game!
+    usage: /<command>

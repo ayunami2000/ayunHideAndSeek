@@ -22,6 +22,8 @@ public class MoveEvent implements Listener {
         if (gamePlayer == null) return;
         if (gamePlayer.isSeeker) return;
 
+        if (gamePlayer.block == null) return;
+
         if (gamePlayer.block.getLocation().equals(player.getLocation().getBlock().getLocation())) return;
 
         if (gamePlayer.isHidden){

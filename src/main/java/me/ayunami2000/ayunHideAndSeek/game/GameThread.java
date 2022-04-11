@@ -7,9 +7,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class GameThread implements Runnable{
     private GameHandler game;
     private long startTime;
+    private long endTime;
 
     public GameThread(GameHandler g){
         game = g;
@@ -20,7 +25,9 @@ public class GameThread implements Runnable{
         //sort out seekers
         int i = 0;
         int seekerCount = Math.min(1, game.players.size() / 4);
-        for (Player player : game.players) {
+        List<Player> playerList = new ArrayList<>(game.players);
+        Collections.shuffle(playerList);
+        for (Player player : playerList) {
             if (i > seekerCount) break;
             GamePlayer.getPlayer(player).isSeeker = true;
             i++;
@@ -52,13 +59,19 @@ public class GameThread implements Runnable{
             hidersLeft -= seekersLeft;
             //if no seekers then end game
             if (seekersLeft == 0){
+                for (Player player : game.players) {
+                    MessageHandler.sendMessage(player, "hidersWin");
+                }
                 game.end();
-                return;
+                break;
             }
             //if no hiders then end game
             if (hidersLeft == 0){
+                for (Player player : game.players) {
+                    MessageHandler.sendMessage(player, "seekersWin");
+                }
                 game.end();
-                return;
+                break;
             }
             //seeker timer
             if (startTime != -1) {
@@ -70,12 +83,19 @@ public class GameThread implements Runnable{
                 */
                 if (secsLeft <= 0) {
                     startTime = -1;
+                    endTime = System.currentTimeMillis();
                     //tp seekers
                     for (Player player : game.players) {
                         MessageHandler.sendMessage(player, "seekerCountdown", 0);
                         if (GamePlayer.getPlayer(player).isSeeker) player.teleport(game.spawn);
                     }
                 }
+            }else if(System.currentTimeMillis() - endTime > 300000){ //5mins
+                for (Player player : game.players) {
+                    MessageHandler.sendMessage(player, "timeUp");
+                }
+                game.end();
+                break;
             }
             //keep everyone healed + ghost air block
             for (Player player : game.players){
@@ -101,6 +121,7 @@ public class GameThread implements Runnable{
                 }
             }
             gamePlayer.block.setType(Material.AIR);
+            GamePlayer.players.remove(player.getUniqueId());
             MessageHandler.sendMessage(player, "gameOver");
         }
     }

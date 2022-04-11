@@ -4,22 +4,22 @@ import me.ayunami2000.ayunHideAndSeek.MessageHandler;
 import me.ayunami2000.ayunHideAndSeek.game.GameHandler;
 import me.ayunami2000.ayunHideAndSeek.game.GamePlayer;
 import me.ayunami2000.ayunHideAndSeek.game.GameState;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerAnimationEvent;
-import org.bukkit.event.player.PlayerAnimationType;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-public class BlockClickEvent implements Listener {
+public class PlayerClickEvent implements Listener {
     @EventHandler
-    public void onInteract(PlayerAnimationEvent event) {
-        PlayerAnimationType animation = event.getAnimationType();
-        Player player = event.getPlayer();
-        Block block = player.getTargetBlock(null, 3);
+    public void onPlayerClick(EntityDamageByEntityEvent event){
+        Entity damager = event.getDamager();
+        if (!(damager instanceof Player))return;
+        Entity damaging = event.getEntity();
+        if (!(damaging instanceof Player))return;
 
-        if (!animation.equals(PlayerAnimationType.ARM_SWING)) return;
+        Player player = (Player) damager;
+        Player clickedPl = (Player) damaging;
 
         GameHandler game = GameHandler.getGame(player);
         if (game == null) return;
@@ -28,17 +28,12 @@ public class BlockClickEvent implements Listener {
         if (gamePlayer == null) return;
         if (!gamePlayer.isSeeker) return;
 
-        GamePlayer clickedPlayer = GamePlayer.getPlayerFromBlock(block);
+        GamePlayer clickedPlayer = GamePlayer.getPlayer(clickedPl);
         if (clickedPlayer == null) return;
-        if (!clickedPlayer.isHidden) return;
+        if (clickedPlayer.isHidden) return;
 
         clickedPlayer.isSeeker = true;
         clickedPlayer.player.teleport(game.spawn);
-        clickedPlayer.isHidden = false;
-        for (Player pl : game.players) {
-            if (GamePlayer.getPlayer(pl).isSeeker) pl.showPlayer(clickedPlayer.player);
-        }
-        clickedPlayer.block.setType(Material.AIR);
         MessageHandler.sendMessage(clickedPlayer.player, "nowSeeker");
         MessageHandler.sendMessage(player, "foundPlayer", clickedPlayer.player.getName());
     }

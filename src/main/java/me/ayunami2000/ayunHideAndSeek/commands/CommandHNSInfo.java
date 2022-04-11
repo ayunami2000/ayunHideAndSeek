@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandHNSJoin implements CommandExecutor {
+public class CommandHNSInfo implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (sender instanceof ConsoleCommandSender) {
@@ -16,15 +16,13 @@ public class CommandHNSJoin implements CommandExecutor {
             return true;
         }
 
-        GameHandler game = GameHandler.joinAnyGame((Player)sender);
+        GameHandler game = GameHandler.getGame((Player)sender);
+
         if (game == null){
-            MessageHandler.sendMessage(sender, "noGamesAvail");
+            MessageHandler.sendMessage(sender, "notInGame");
         }else{
             String playerListStr = "";
-            for (Player player : game.players) {
-                MessageHandler.sendMessage(player, "joinedGame", sender.getName());
-                playerListStr += player.getName() + ", ";
-            }
+            for (Player player : game.players) playerListStr += player.getName() + ", ";
             playerListStr = playerListStr.substring(0, playerListStr.length() - 2);
             MessageHandler.sendMessage(sender, "gameInfo", game.state.name(), playerListStr);
         }

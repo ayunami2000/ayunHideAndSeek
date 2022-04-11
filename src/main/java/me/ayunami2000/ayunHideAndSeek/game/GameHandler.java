@@ -3,9 +3,7 @@ package me.ayunami2000.ayunHideAndSeek.game;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GameHandler {
@@ -31,24 +29,24 @@ public class GameHandler {
         return gh;
     }
 
-    public static boolean joinAnyGame(Player player){
+    public static GameHandler joinAnyGame(Player player){
         if (games.size() == 0){
-            return false;
+            return null;
         }
         return games.stream().sorted(Comparator.comparing(game -> game.players.size())).collect(Collectors.toList()).get(0).joinGame(player);
     }
 
-    public boolean joinGame(Player player){
+    public GameHandler joinGame(Player player){
         for (GameHandler game : games) {
             if (game.players.contains(player)){
-                return false;
+                return null;
             }
         }
         if (this.state == GameState.LOBBY){
             new GamePlayer(player);
-            return players.add(player);
+            return players.add(player) ? this : null;
         }
-        return false;
+        return null;
     }
 
     public boolean leaveGame(Player player){
@@ -98,10 +96,12 @@ public class GameHandler {
     }
 
     public void end(){
-        state = GameState.ENDED;
-        for (Player player : players) {
-            GamePlayer.players.remove(player.getUniqueId());
+        if (state == GameState.LOBBY){
+            for (Player player : players) {
+                GamePlayer.players.remove(player.getUniqueId());
+            }
         }
+        state = GameState.ENDED;
         players.clear();
         games.remove(this);
     }
