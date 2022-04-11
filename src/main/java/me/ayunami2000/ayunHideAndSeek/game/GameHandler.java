@@ -1,6 +1,6 @@
 package me.ayunami2000.ayunHideAndSeek.game;
 
-import me.ayunami2000.ayunHideAndSeek.MessageHandler;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.Comparator;
@@ -13,10 +13,22 @@ public class GameHandler {
 
     public Set<Player> players = new HashSet<>();
 
+    //todo: allow multiple spawns
+    public Location spawn = null;
+
     public GameState state = GameState.LOBBY;
 
-    public GameHandler(){
-        games.add(this);
+    public static GameHandler createGame(Player player){
+        for (GameHandler game : games) {
+            if (game.players.contains(player)){
+                return null;
+            }
+        }
+        GameHandler gh = new GameHandler();
+        games.add(gh);
+        gh.spawn = player.getLocation();
+        gh.players.add(player);
+        return gh;
     }
 
     public static boolean joinAnyGame(Player player){
@@ -56,8 +68,15 @@ public class GameHandler {
         return false;
     }
 
-    public void start(){
+    public boolean start(){
+        if (players.size() < 2){
+            return false;
+        }
+        if (spawn == null){
+            return false;
+        }
         state = GameState.STARTED;
+        return true;
     }
 
     public static void endAll(){

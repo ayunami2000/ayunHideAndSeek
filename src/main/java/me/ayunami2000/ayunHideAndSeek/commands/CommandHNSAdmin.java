@@ -25,6 +25,8 @@ public class CommandHNSAdmin implements CommandExecutor {
 
         Player player = (Player) sender;
 
+        GameHandler game = GameHandler.getGame(player);
+
         String subCmd = args.length == 0 ? "help" : args[0].toLowerCase();
         switch (subCmd){
             case "help":
@@ -32,26 +34,42 @@ public class CommandHNSAdmin implements CommandExecutor {
                 MessageHandler.sendMessage(sender, "helpAdmin");
                 break;
             case "create":
-
+                if (GameHandler.createGame(player) == null){
+                    MessageHandler.sendMessage(sender, "cannotCreateGame");
+                }else{
+                    MessageHandler.sendMessage(sender, "createGame");
+                }
                 break;
             case "start":
-
+                if (game == null){
+                    MessageHandler.sendMessage(sender, "notInGame");
+                }else{
+                    if(game.start()){
+                        MessageHandler.sendMessage(sender, "startGame");
+                    }else{
+                        MessageHandler.sendMessage(sender, "cannotStartGame");
+                    }
+                }
                 break;
             case "stop":
-                GameHandler game = GameHandler.getGame(player);
-                game.end();
+                if (game == null){
+                    MessageHandler.sendMessage(sender, "notInGame");
+                }else{
+                    game.end();
+                    MessageHandler.sendMessage(sender, "endGame");
+                }
                 break;
             case "stopall":
                 GameHandler.endAll();
+                MessageHandler.sendMessage(sender, "endAllGames");
                 break;
             case "spawn":
-
-                break;
-            case "corner1":
-
-                break;
-            case "corner2":
-
+                if (game == null){
+                    MessageHandler.sendMessage(sender, "notInGame");
+                }else{
+                    game.spawn = player.getLocation();
+                    MessageHandler.sendMessage(sender, "setSpawn");
+                }
                 break;
             default:
                 MessageHandler.sendMessage(sender, "unknownArgs");
