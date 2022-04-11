@@ -19,6 +19,11 @@ public class GameThread implements Runnable{
             GamePlayer.getPlayer(player).isSeeker = true;
             i++;
         }
+        //tp non-seekers into arena
+        for (Player player : game.players) {
+            if (!GamePlayer.getPlayer(player).isSeeker) player.teleport(game.spawn);
+        }
+        //todo: in the below loop, watch until 30s have passed, then tp the seekers into the spawn area.
         //game loop
         while(game.state == GameState.STARTED){
             int seekersLeft = 0;
@@ -37,7 +42,6 @@ public class GameThread implements Runnable{
                 game.end();
                 return;
             }
-            //todo: event listeners (block mine, player kill, disguise change)
             /*
             try {
                 Thread.sleep(1000); // why not every second, easier on the server anyways...

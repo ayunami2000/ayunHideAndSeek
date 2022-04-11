@@ -44,6 +44,8 @@ public class GamePlayer {
         }
         lastHideChange = System.currentTimeMillis();
         isHidden = !isHidden;
+        //todo: for ease + anticheating, actually place the block but then send the hidden player air block packet
+        //player.sendBlockChange(your_location, your_material, (byte)your_data);
         return true;
     }
 
