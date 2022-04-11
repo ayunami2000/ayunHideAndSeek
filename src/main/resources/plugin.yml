@@ -1,8 +1,6 @@
 name: ayunHideAndSeek
 version: 1.0
 main: me.ayunami2000.ayunHideAndSeek.Main
-depend:
-  - DisguiseCraft
 commands:
   hnsadmin:
     description: Control ayunHideAndSeek

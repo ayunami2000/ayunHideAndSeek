@@ -12,7 +12,9 @@ public class GamePlayer {
     public final Player player;
     public Block block = null;
     public long lastBlockChange = 0;
+    public long lastHideChange = 0;
     public boolean isSeeker = false;
+    public boolean isHidden = false;
 
     public GamePlayer(Player pl){
         player = pl;
@@ -34,5 +36,21 @@ public class GamePlayer {
         lastBlockChange = System.currentTimeMillis();
         block = bl;
         return true;
+    }
+
+    public boolean toggleHidden(){
+        if (lastHideChange < 2000){
+            return false;
+        }
+        lastHideChange = System.currentTimeMillis();
+        isHidden = !isHidden;
+        return true;
+    }
+
+    public static GamePlayer getPlayerFromBlock(Block bl){
+        for (GamePlayer gp : players.values()) {
+            if (gp.block == bl) return gp;
+        }
+        return null;
     }
 }
