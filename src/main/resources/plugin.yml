@@ -1,0 +1,18 @@
+name: ayunHideAndSeek
+version: 1.0
+main: me.ayunami2000.ayunHideAndSeek.Main
+depend:
+  - DisguiseCraft
+commands:
+  hnsadmin:
+    description: Control ayunHideAndSeek
+    usage: /<command>
+    permission: ayunhideandseek.admin
+  hnsjoin:
+    description: Join a hide and seek game!
+    usage: /<command>
+    permission: ayunhideandseek.player.join
+  hnsleave:
+    description: Leave a hide and seek game!
+    usage: /<command>
+    permission: ayunhideandseek.player.leave
