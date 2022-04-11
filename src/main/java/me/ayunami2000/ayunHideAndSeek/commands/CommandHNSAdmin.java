@@ -34,7 +34,7 @@ public class CommandHNSAdmin implements CommandExecutor {
                 MessageHandler.sendMessage(sender, "helpAdmin");
                 break;
             case "create":
-                if (GameHandler.createGame(player) == null){
+                if (game != null || GameHandler.createGame(player) == null){
                     MessageHandler.sendMessage(sender, "cannotCreateGame");
                 }else{
                     MessageHandler.sendMessage(sender, "createGame");

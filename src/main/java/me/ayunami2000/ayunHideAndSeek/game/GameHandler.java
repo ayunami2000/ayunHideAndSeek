@@ -27,7 +27,7 @@ public class GameHandler {
         GameHandler gh = new GameHandler();
         games.add(gh);
         gh.spawn = player.getLocation();
-        gh.players.add(player);
+        gh.joinGame(player);
         return gh;
     }
 
@@ -39,7 +39,13 @@ public class GameHandler {
     }
 
     public boolean joinGame(Player player){
+        for (GameHandler game : games) {
+            if (game.players.contains(player)){
+                return false;
+            }
+        }
         if (this.state == GameState.LOBBY){
+            new GamePlayer(player);
             return players.add(player);
         }
         return false;
@@ -88,6 +94,9 @@ public class GameHandler {
 
     public void end(){
         state = GameState.ENDED;
+        for (Player player : players) {
+            GamePlayer.players.remove(player.getUniqueId());
+        }
         players.clear();
         games.remove(this);
     }
