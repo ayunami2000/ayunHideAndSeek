@@ -4,6 +4,7 @@ import me.ayunami2000.ayunHideAndSeek.commands.CommandHNSAdmin;
 import me.ayunami2000.ayunHideAndSeek.commands.CommandHNSJoin;
 import me.ayunami2000.ayunHideAndSeek.commands.CommandHNSLeave;
 import me.ayunami2000.ayunHideAndSeek.events.BlockClickEvent;
+import me.ayunami2000.ayunHideAndSeek.events.MoveEvent;
 import me.ayunami2000.ayunHideAndSeek.events.SneakEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -19,6 +20,7 @@ public class Main extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new BlockClickEvent(), this);
         getServer().getPluginManager().registerEvents(new SneakEvent(), this);
+        getServer().getPluginManager().registerEvents(new MoveEvent(), this);
 
         getCommand("hnsadmin").setExecutor(new CommandHNSAdmin());
         getCommand("hnsjoin").setExecutor(new CommandHNSJoin());

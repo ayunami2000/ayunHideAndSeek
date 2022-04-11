@@ -69,6 +69,9 @@ public class GameHandler {
     public static boolean leaveCurrentGame(Player player){
         for (GameHandler game : games) {
             if (game.players.contains(player)){
+                if (game.players.size() == 1){
+                    game.end();
+                }
                 return game.leaveGame(player);
             }
         }

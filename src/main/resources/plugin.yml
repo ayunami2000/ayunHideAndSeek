@@ -9,8 +9,6 @@ commands:
   hnsjoin:
     description: Join a hide and seek game!
     usage: /<command>
-    permission: ayunhideandseek.player.join
   hnsleave:
     description: Leave a hide and seek game!
     usage: /<command>
-    permission: ayunhideandseek.player.leave

@@ -9,16 +9,10 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class CommandHNSLeave implements CommandExecutor {
-    private static String PERMISSION = "ayunhideandseek.player.leave";
-
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (sender instanceof ConsoleCommandSender) {
             MessageHandler.sendMessage(sender, "noConsole");
-            return true;
-        }
-        if (!(sender.isOp() || sender.hasPermission(PERMISSION))) {
-            MessageHandler.sendMessage(sender, "noPermission", PERMISSION);
             return true;
         }
 
