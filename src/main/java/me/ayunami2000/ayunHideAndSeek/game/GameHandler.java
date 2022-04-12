@@ -1,6 +1,9 @@
 package me.ayunami2000.ayunHideAndSeek.game;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_5_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_5_R3.entity.CraftEntity;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -51,8 +54,22 @@ public class GameHandler {
 
     public GameHandler leaveGame(Player player){
         if (players.contains(player)){
+            GamePlayer gamePlayer = GamePlayer.getPlayer(player);
+            if (gamePlayer.isSeeker) {
+                for (Player pl : players) {
+                    pl.showPlayer(player);
+                    forceUpdatePlayer(pl, player);
+                }
+            }
             players.remove(player);
+            if (gamePlayer.block != null) gamePlayer.block.setType(Material.AIR);
             GamePlayer.players.remove(player.getUniqueId());
+            player.getInventory().clear();
+            player.setMaxHealth(20);
+            player.setFlying(false);
+            player.setAllowFlight(false);
+            player.setHealth(0); // respawn to change position
+            if (players.size() == 1 && state == GameState.LOBBY) end();
             return this;
         }
         return null;
@@ -61,9 +78,6 @@ public class GameHandler {
     public static GameHandler leaveCurrentGame(Player player){
         for (GameHandler game : games) {
             if (game.players.contains(player)){
-                if (game.players.size() == 1){
-                    game.end();
-                }
                 return game.leaveGame(player);
             }
         }
@@ -107,5 +121,9 @@ public class GameHandler {
             }
         }
         return null;
+    }
+
+    public static void forceUpdatePlayer(Player playerFor, Player player){
+        ((CraftWorld) playerFor.getWorld()).getHandle().entityJoinedWorld(((CraftEntity) player).getHandle(), false);
     }
 }

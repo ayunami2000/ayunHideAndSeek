@@ -41,7 +41,10 @@ public class SneakEvent implements Listener {
                 }
             }else{
                 for (Player pl : game.players) {
-                    if (GamePlayer.getPlayer(pl).isSeeker) pl.showPlayer(player);
+                    if (GamePlayer.getPlayer(pl).isSeeker) {
+                        pl.showPlayer(player);
+                        GameHandler.forceUpdatePlayer(pl, player);
+                    }
                 }
                 gamePlayer.block.setType(Material.AIR);
             }

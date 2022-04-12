@@ -36,7 +36,10 @@ public class BlockClickEvent implements Listener {
         clickedPlayer.player.teleport(game.spawn);
         clickedPlayer.isHidden = false;
         for (Player pl : game.players) {
-            if (GamePlayer.getPlayer(pl).isSeeker) pl.showPlayer(clickedPlayer.player);
+            if (GamePlayer.getPlayer(pl).isSeeker) {
+                pl.showPlayer(clickedPlayer.player);
+                GameHandler.forceUpdatePlayer(pl, clickedPlayer.player);
+            }
         }
         clickedPlayer.block.setType(Material.AIR);
         MessageHandler.sendMessage(clickedPlayer.player, "nowSeeker");

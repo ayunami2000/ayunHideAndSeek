@@ -53,6 +53,16 @@ public class GameThread implements Runnable{
         //create jail
         Location loc = game.spawn.clone();
         loc.setY(300);
+        //jail seekers
+        for (Player player : game.players){
+            GamePlayer gamePlayer = GamePlayer.getPlayer(player);
+            if (gamePlayer.isSeeker){
+                gamePlayer.isFrozen = true;
+                player.setAllowFlight(true);
+                player.setFlying(true);
+                player.teleport(loc);
+            }
+        }
         //game loop
         while(game.state == GameState.STARTED){
             int seekersLeft = 0;
@@ -77,6 +87,12 @@ public class GameThread implements Runnable{
                 game.end();
                 break;
             }
+            //keep frozen
+            for (Player player : game.players){
+                if (GamePlayer.getPlayer(player).isFrozen){
+                    player.setFlying(true);
+                }
+            }
             //seeker timer
             if (startTime != -1) {
                 long secsLeft = (30000 - (System.currentTimeMillis() - startTime)) / 1000L;
@@ -85,21 +101,18 @@ public class GameThread implements Runnable{
                     MessageHandler.sendMessage(player, "seekerCountdown", secsLeft);
                 }
                 */
-                for (Player player : game.players){
-                    if (GamePlayer.getPlayer(player).isSeeker){
-                        player.setFlying(true);
-                        player.teleport(loc);
-                    }
-                }
                 if (secsLeft <= 0) {
                     startTime = -1;
                     endTime = System.currentTimeMillis();
                     //tp seekers
                     for (Player player : game.players) {
+                        GamePlayer gamePlayer = GamePlayer.getPlayer(player);
                         MessageHandler.sendMessage(player, "seekerCountdown", 0);
-                        if (GamePlayer.getPlayer(player).isSeeker) {
+                        if (gamePlayer.isSeeker) {
+                            gamePlayer.isFrozen = false;
                             player.setFallDistance(0);
                             player.setFlying(false);
+                            player.setAllowFlight(false);
                             player.teleport(game.spawn);
                         }
                     }
@@ -128,14 +141,7 @@ public class GameThread implements Runnable{
             } catch (InterruptedException ignored) {}
         }
         for (Player player : game.players) {
-            GamePlayer gamePlayer = GamePlayer.getPlayer(player);
-            if (gamePlayer.isSeeker) {
-                for (Player pl : game.players) {
-                    player.showPlayer(pl);
-                }
-            }
-            gamePlayer.block.setType(Material.AIR);
-            GamePlayer.players.remove(player.getUniqueId());
+            game.leaveGame(player);
             MessageHandler.sendMessage(player, "gameOver");
         }
     }

@@ -14,6 +14,7 @@ public class GamePlayer {
     public long lastHideChange = 0;
     public boolean isSeeker = false;
     public boolean isHidden = false;
+    public boolean isFrozen = false;
 
     public GamePlayer(Player pl){
         player = pl;

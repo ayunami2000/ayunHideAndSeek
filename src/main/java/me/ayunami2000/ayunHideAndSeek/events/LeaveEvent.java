@@ -15,7 +15,7 @@ public class LeaveEvent implements Listener {
         Player player = event.getPlayer();
 
         GamePlayer gamePlayer = GamePlayer.getPlayer(player);
-        if (gamePlayer != null) gamePlayer.block.setType(Material.AIR);
+        if (gamePlayer != null && gamePlayer.block != null) gamePlayer.block.setType(Material.AIR);
         GameHandler game = GameHandler.leaveCurrentGame(player);
         if (game == null) return;
         for (Player pl : game.players) {
