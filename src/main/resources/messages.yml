@@ -33,3 +33,4 @@ gameInfo:
 hidersWin: "&bThe hiders have won!"
 seekersWin: "&bThe seekers have won!"
 timeUp: "&bTime's up! The hiders have won!"
+playerLeft: "&3{0}&b left the game."

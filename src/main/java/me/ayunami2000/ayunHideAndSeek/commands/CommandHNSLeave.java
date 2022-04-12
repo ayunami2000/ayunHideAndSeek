@@ -16,8 +16,12 @@ public class CommandHNSLeave implements CommandExecutor {
             return true;
         }
 
-        if (GameHandler.leaveCurrentGame((Player)sender)){
+        GameHandler game = GameHandler.leaveCurrentGame((Player)sender);
+        if (game != null){
             MessageHandler.sendMessage(sender, "leftGame");
+            for (Player player : game.players) {
+                MessageHandler.sendMessage(player, "playerLeft", sender.getName());
+            }
         }else{
             MessageHandler.sendMessage(sender, "notInGame");
         }

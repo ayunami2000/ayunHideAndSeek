@@ -49,22 +49,16 @@ public class GameHandler {
         return null;
     }
 
-    public boolean leaveGame(Player player){
-        //for now, allow players to leave mid-game. rehandle the player change dynamically
-        /*
-        if (state != GameState.LOBBY){
-            return false;
-        }
-        */
+    public GameHandler leaveGame(Player player){
         if (players.contains(player)){
             players.remove(player);
             GamePlayer.players.remove(player.getUniqueId());
-            return true;
+            return this;
         }
-        return false;
+        return null;
     }
 
-    public static boolean leaveCurrentGame(Player player){
+    public static GameHandler leaveCurrentGame(Player player){
         for (GameHandler game : games) {
             if (game.players.contains(player)){
                 if (game.players.size() == 1){
@@ -73,7 +67,7 @@ public class GameHandler {
                 return game.leaveGame(player);
             }
         }
-        return false;
+        return null;
     }
 
     public boolean start(){
