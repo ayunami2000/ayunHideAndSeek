@@ -26,15 +26,20 @@ public class PlayerClickEvent implements Listener {
         if (game.state != GameState.STARTED) return;
         GamePlayer gamePlayer = GamePlayer.getPlayer(player);
         if (gamePlayer == null) return;
-        if (!gamePlayer.isSeeker) return;
-
         GamePlayer clickedPlayer = GamePlayer.getPlayer(clickedPl);
         if (clickedPlayer == null) return;
-        if (clickedPlayer.isHidden) return;
+        if (gamePlayer.isSeeker) {
+            if (clickedPlayer.isHidden) return;
 
-        clickedPlayer.isSeeker = true;
-        clickedPlayer.player.teleport(game.spawn);
-        MessageHandler.sendMessage(clickedPlayer.player, "nowSeeker");
-        MessageHandler.sendMessage(player, "foundPlayer", clickedPlayer.player.getName());
+            clickedPlayer.isSeeker = true;
+            clickedPlayer.player.teleport(game.spawn);
+            MessageHandler.sendMessage(clickedPlayer.player, "nowSeeker");
+            MessageHandler.sendMessage(player, "foundPlayer", clickedPlayer.player.getName());
+        }else{
+            //clicked seeker, check if hidden and if so count as normal, if not hidden though then do something idk
+            if (gamePlayer.isHidden) return; //normal
+
+            clickedPlayer.player.setMaxHealth(clickedPlayer.player.getMaxHealth() - 3);
+        }
     }
 }

@@ -20,6 +20,7 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerClickEvent(), this);
         getServer().getPluginManager().registerEvents(new PlaceEvent(), this);
         getServer().getPluginManager().registerEvents(new LeaveEvent(), this);
+        getServer().getPluginManager().registerEvents(new RespawnEvent(), this);
 
         getCommand("hnsadmin").setExecutor(new CommandHNSAdmin());
         getCommand("hnsjoin").setExecutor(new CommandHNSJoin());

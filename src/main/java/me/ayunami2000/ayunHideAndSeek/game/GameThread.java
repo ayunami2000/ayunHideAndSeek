@@ -2,6 +2,7 @@ package me.ayunami2000.ayunHideAndSeek.game;
 
 import me.ayunami2000.ayunHideAndSeek.MessageHandler;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -49,6 +50,9 @@ public class GameThread implements Runnable{
         }
         //set start time
         startTime = System.currentTimeMillis();
+        //create jail
+        Location loc = game.spawn.clone();
+        loc.setY(300);
         //game loop
         while(game.state == GameState.STARTED){
             int seekersLeft = 0;
@@ -81,13 +85,23 @@ public class GameThread implements Runnable{
                     MessageHandler.sendMessage(player, "seekerCountdown", secsLeft);
                 }
                 */
+                for (Player player : game.players){
+                    if (GamePlayer.getPlayer(player).isSeeker){
+                        player.setFlying(true);
+                        player.teleport(loc);
+                    }
+                }
                 if (secsLeft <= 0) {
                     startTime = -1;
                     endTime = System.currentTimeMillis();
                     //tp seekers
                     for (Player player : game.players) {
                         MessageHandler.sendMessage(player, "seekerCountdown", 0);
-                        if (GamePlayer.getPlayer(player).isSeeker) player.teleport(game.spawn);
+                        if (GamePlayer.getPlayer(player).isSeeker) {
+                            player.setFallDistance(0);
+                            player.setFlying(false);
+                            player.teleport(game.spawn);
+                        }
                     }
                 }
             }else if(System.currentTimeMillis() - endTime > 300000){ //5mins
