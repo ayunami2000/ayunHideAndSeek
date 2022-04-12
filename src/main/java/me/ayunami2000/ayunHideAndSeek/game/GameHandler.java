@@ -69,7 +69,7 @@ public class GameHandler {
             player.setFlying(false);
             player.setAllowFlight(false);
             player.setHealth(0); // respawn to change position
-            if (players.size() == 1 && state == GameState.LOBBY) end();
+            if (players.size() == 0 && state == GameState.LOBBY) end();
             return this;
         }
         return null;
@@ -85,6 +85,7 @@ public class GameHandler {
     }
 
     public boolean start(){
+        if (state != GameState.LOBBY) return false;
         if (players.size() < 2){
             return false;
         }

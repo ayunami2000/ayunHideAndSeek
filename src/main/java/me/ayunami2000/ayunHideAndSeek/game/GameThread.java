@@ -74,6 +74,7 @@ public class GameThread implements Runnable{
             //if no seekers then end game
             if (seekersLeft == 0){
                 for (Player player : game.players) {
+                    game.leaveGame(player);
                     MessageHandler.sendMessage(player, "hidersWin");
                 }
                 game.end();
@@ -82,6 +83,7 @@ public class GameThread implements Runnable{
             //if no hiders then end game
             if (hidersLeft == 0){
                 for (Player player : game.players) {
+                    game.leaveGame(player);
                     MessageHandler.sendMessage(player, "seekersWin");
                 }
                 game.end();
